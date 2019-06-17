@@ -14,7 +14,13 @@ if node['platform_family'] != 'windows'
   execute "import-command" do
     command "sudo -u dd-agent -- /opt/datadog-agent/bin/agent/agent import /etc/dd-agent/ /etc/datadog-agent/"
     action :run
-    notifies :restart, 'service[datadog-agent]'
+  end
+
+  service 'datadog-agent' do
+    if node['platform_family'] == 'rhel' && node['platform_version'].to_i < 7
+      provider Chef::Provider::Service::Upstart
+    end
+    action :restart
   end
 end
 

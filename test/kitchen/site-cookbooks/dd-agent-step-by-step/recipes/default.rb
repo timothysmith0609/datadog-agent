@@ -75,7 +75,7 @@ if node['platform_family'] == 'windows'
 end
 
 service 'datadog-agent' do
-  if node['platform_family'] == 'rhel' && node['platform_version'].to_f < 7
+  if node['platform_family'] == 'rhel' && node['platform_version'].to_i < 7
     provider Chef::Provider::Service::Upstart
   end
   action :start

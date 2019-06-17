@@ -141,6 +141,7 @@ platforms:
       <%= key %>: <%= value %>
       <% end %>
   <% end %>
+    provision_command: mkdir -p /run/sshd
     username: <%= vm_username %>
     password: <%= vm_password %>
 

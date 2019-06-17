@@ -126,4 +126,5 @@ if node['platform_family'] == 'windows'
     notifies :restart, 'service[datadog-agent]'
   end
 
+node['datadog']['agent6'] = true
 end

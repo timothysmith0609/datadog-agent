@@ -29,7 +29,7 @@ def generate_test_and_parallel_test(name, description, shell_command, driver, de
   task "#{name}-#{driver}-parallel".to_sym, :concurrency do |t, args|
     Rake::Task['berks'].invoke
     concurrency = args[:concurrency] || "4"
-    sh shell_command + " '^dd*.*-#{driver}$'" + ' --concurrency=' + concurrency + " -d #{destroy_strategy}"
+    sh shell_command + " '^dd*.*-#{driver}$'" + ' --concurrency=' + concurrency + " -d #{destroy_strategy} --log-level=debug --debug"
   end
 end
 

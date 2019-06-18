@@ -283,17 +283,14 @@ shared_examples_for "a running Agent with no errors" do
     i = 0
     while i < 30 do
       json_info_output = json_info
-      begin
-        if json_info_output.key?("runnerStats")
-          && json_info_output['runnerStats']).key?("Checks")
-          && !json_info_output['runnerStats']['Checks'].empty?
-          result = true
-          break
-        end
-      rescue
+      if json_info_output.key?("runnerStats") &&
+        json_info_output['runnerStats']).key?("Checks") &&
+        !json_info_output['runnerStats']['Checks'].empty?
+        result = true
+        break
       end
       sleep 1
-      i++
+      i += 1
     end
     expect(result).to be_truthy
   end

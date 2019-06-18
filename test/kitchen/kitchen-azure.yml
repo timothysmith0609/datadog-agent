@@ -121,9 +121,8 @@ platforms:
 
 %>
 - name: <%= platform_name %>
-  driver:
-    provision_command: mkdir -p /run/sshd
   <% if host == "hyperv" %>
+  driver:
     name: hyperv
     parent_vhd_folder: <%= platform[1] %>
     parent_vhd_name: <%= platform[2] %>

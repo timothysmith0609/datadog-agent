@@ -289,6 +289,7 @@ shared_examples_for "a running Agent with no errors" do
         result = true
         break
       end
+      sleep 1
       i++
     end
     expect(result).to be_truthy

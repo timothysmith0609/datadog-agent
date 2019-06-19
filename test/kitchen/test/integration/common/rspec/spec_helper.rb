@@ -51,7 +51,7 @@ end
 def start
   if os == :windows
     system 'net start datadogagent 2>&1'
-    sleep 5
+    sleep 10
   else
     if has_systemctl
       system 'sudo systemctl start datadog-agent.service && sleep 10'
@@ -66,16 +66,16 @@ def restart
     # forces the trace agent (and other dependent services) to stop
     if is_running?
       system 'net stop /y datadogagent 2>&1'
-      sleep 5
+      sleep 10
     end
     system 'net start datadogagent 2>&1'
-    sleep 5
+    sleep 10
   else
     if has_systemctl
-      system 'sudo systemctl restart datadog-agent.service && sleep 5'
+      system 'sudo systemctl restart datadog-agent.service && sleep 10'
     else
       # initctl can't restart
-      system '(sudo initctl restart datadog-agent || sudo initctl start datadog-agent) && sleep 5'
+      system '(sudo initctl restart datadog-agent || sudo initctl start datadog-agent) && sleep 10'
     end
   end
 end

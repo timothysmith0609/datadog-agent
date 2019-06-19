@@ -29,7 +29,7 @@ def generate_test_and_parallel_test(name, description, shell_command, driver, de
   task "#{name}-#{driver}-parallel".to_sym do |t, args|
     Rake::Task['berks'].invoke
     # By default, the -c option defaults the number of concurrent tasks to the number of instances
-    sh shell_command + " '^dd*.*-#{driver}$'" + ' -c' + " -d #{destroy_strategy} --debug --log-level=debug"
+    sh shell_command + " '^dd*.*-#{driver}$'" + ' -c' + " -d #{destroy_strategy}"
   end
 end
 

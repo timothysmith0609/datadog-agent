@@ -8,6 +8,8 @@
 #
 require 'uri'
 
+node['datadog']['agent6'] = true
+
 if node['dd-agent-upgrade']['add_new_repo']
   case node['platform_family']
   when 'debian'

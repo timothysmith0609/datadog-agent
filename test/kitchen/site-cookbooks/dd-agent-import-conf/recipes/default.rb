@@ -10,13 +10,12 @@
 # the Agent 6 has already been setup.
 # We just have to run the command.
 
-node.override['datadog']['agent6'] = true
 
 if node['platform_family'] != 'windows'
   execute "import-command" do
     command "sudo -u dd-agent -- /opt/datadog-agent/bin/agent/agent import /etc/dd-agent/ /etc/datadog-agent/"
     action :run
-    notifies :restart, 'service[datadog-agent]'
+    notifies :restart, 'service[datadog-agent-6]'
   end
 end
 

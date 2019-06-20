@@ -8,13 +8,7 @@
 #
 require 'uri'
 
-node.set['datadog']['agent6'] = true
-
 if node['dd-agent-upgrade']['add_new_repo']
-  log "Agent 6: " + node['datadog']['agent6'].to_s do
-    level :debug
-  end
-
   case node['platform_family']
   when 'debian'
     include_recipe 'apt'

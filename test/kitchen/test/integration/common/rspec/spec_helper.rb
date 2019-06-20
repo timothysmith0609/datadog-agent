@@ -34,6 +34,20 @@ def agent_command
   end
 end
 
+def wait_until_stopped
+  for _ in 1..15 do
+    break if !is_running?
+    sleep 1
+  end
+end
+
+def wait_until_started
+  for _ in 1..15 do
+    break if is_running?
+    sleep 1
+  end
+end
+
 def stop
   if os == :windows
     # forces the trace agent (and other dependent services) to stop
@@ -41,11 +55,12 @@ def stop
     sleep 10
   else
     if has_systemctl
-      system 'sudo systemctl stop datadog-agent.service && sleep 10'
+      system 'sudo systemctl stop datadog-agent.service'
     else
-      system 'sudo initctl stop datadog-agent && sleep 10'
+      system 'sudo initctl stop datadog-agent'
     end
   end
+  wait_until_stopped
 end
 
 def start
@@ -54,11 +69,12 @@ def start
     sleep 10
   else
     if has_systemctl
-      system 'sudo systemctl start datadog-agent.service && sleep 10'
+      system 'sudo systemctl start datadog-agent.service'
     else
-      system 'sudo initctl start datadog-agent && sleep 10'
+      system 'sudo initctl start datadog-agent'
     end
   end
+  wait_until_started
 end
 
 def restart
@@ -66,10 +82,10 @@ def restart
     # forces the trace agent (and other dependent services) to stop
     if is_running?
       system 'net stop /y datadogagent 2>&1'
-      sleep 10
+      wait_until_stopped
     end
     system 'net start datadogagent 2>&1'
-    sleep 10
+    wait_until_started
   else
     if has_systemctl
       system 'sudo systemctl restart datadog-agent.service && sleep 10'
@@ -280,8 +296,7 @@ shared_examples_for "a running Agent with no errors" do
 
   it 'has running checks' do
     result = false
-    i = 0
-    while i < 30 do
+    for _ in 1..30 do
       json_info_output = json_info
       if json_info_output.key?('runnerStats') &&
         json_info_output['runnerStats'].key?('Checks') &&
@@ -290,7 +305,6 @@ shared_examples_for "a running Agent with no errors" do
         break
       end
       sleep 1
-      i += 1
     end
     expect(result).to be_truthy
   end

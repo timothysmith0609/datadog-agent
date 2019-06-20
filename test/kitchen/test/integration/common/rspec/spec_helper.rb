@@ -51,49 +51,50 @@ end
 def stop
   if os == :windows
     # forces the trace agent (and other dependent services) to stop
-    system 'net stop /y datadogagent 2>&1'
-    sleep 10
+    result = system 'net stop /y datadogagent 2>&1'
   else
     if has_systemctl
-      system 'sudo systemctl stop datadog-agent.service'
+      result = system 'sudo systemctl stop datadog-agent.service'
     else
-      system 'sudo initctl stop datadog-agent'
+      result = system 'sudo initctl stop datadog-agent'
     end
   end
   wait_until_stopped
+  result
 end
 
 def start
   if os == :windows
-    system 'net start datadogagent 2>&1'
-    sleep 10
+    result = system 'net start datadogagent 2>&1'
   else
     if has_systemctl
-      system 'sudo systemctl start datadog-agent.service'
+      result = system 'sudo systemctl start datadog-agent.service'
     else
-      system 'sudo initctl start datadog-agent'
+      result = system 'sudo initctl start datadog-agent'
     end
   end
   wait_until_started
+  result
 end
 
 def restart
   if os == :windows
     # forces the trace agent (and other dependent services) to stop
     if is_running?
-      system 'net stop /y datadogagent 2>&1'
+      result = system 'net stop /y datadogagent 2>&1'
       wait_until_stopped
     end
-    system 'net start datadogagent 2>&1'
+    result = system 'net start datadogagent 2>&1'
     wait_until_started
   else
     if has_systemctl
-      system 'sudo systemctl restart datadog-agent.service && sleep 10'
+      result = system 'sudo systemctl restart datadog-agent.service && sleep 10'
     else
       # initctl can't restart
-      system '(sudo initctl restart datadog-agent || sudo initctl start datadog-agent) && sleep 10'
+      result = system '(sudo initctl restart datadog-agent || sudo initctl start datadog-agent) && sleep 10'
     end
   end
+  result
 end
 
 def has_systemctl
@@ -389,7 +390,6 @@ shared_examples_for 'an Agent that stops' do
   end
 
   it 'is not running any agent processes' do
-    sleep 5 # need to wait for the Agent to stop
     expect(agent_processes_running?).to be_falsey
   end
 
